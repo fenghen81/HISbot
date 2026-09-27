@@ -1,0 +1,5 @@
+# 开发 / 测试 / 打包附加依赖（在 requirements.txt 基础上）
+pytest>=8.0
+pyinstaller>=6.0
+reportlab>=4.0        # 集成测试生成带文本层中文 PDF
+fpdf2>=2.7            # 备用 PDF 生成

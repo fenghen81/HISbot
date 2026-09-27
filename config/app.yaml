@@ -1,0 +1,62 @@
+# =====================================================================
+# 全局配置 app.yaml（文档附录 B.1）
+# 所有相对路径相对程序根目录（hisbot/）解析。
+# =====================================================================
+app:
+  timezone: Asia/Shanghai
+  language: zh-CN
+  data_dir: ./data                 # SQLite、归档、异常目录根
+  template_dir: ./templates
+  log_dir: ./logs
+  snapshot_dir: ./snapshots
+
+mirror:
+  fps: 5                           # 镜像刷新率 1~10（≥5 帧/秒）
+  capture_region: window           # window | screen
+  highlight_color: '#E03131'
+  show_track: true
+
+timing:
+  page_load_timeout_ms: 10000
+  element_timeout_ms: 5000
+  download_timeout_ms: 120000
+  action_interval_ms: [300, 800]   # 动作间随机等待区间
+
+scan:
+  max_depth: 4
+  max_branch: 30
+  sibling_dedup_similarity: 0.9
+
+download:
+  mode: silent
+  # 浏览器默认下载目录。真实部署改为浏览器实际静默下载目录，如
+  # Windows: C:/Users/bot/Downloads   Linux: /home/bot/Downloads
+  watch_dir: ./data/downloads
+  archive_dir: ./data/archive
+  quarantine_dir: ./data/quarantine
+  stable_sample_interval_ms: 500
+  stable_sample_count: 3           # 连续 3 次大小不变
+  exclusive_open_check: true       # 独占打开检查
+  magic_check: true                # 文件头魔数校验
+  temp_suffixes: ['.crdownload', '.part', '.tmp', '.download', '.!ut']
+  allowed_ext: ['.xlsx', '.xls', '.csv', '.pdf']
+  completion_keywords: ['下载完成', '已完成', '下载完毕', '打开', '在文件夹中显示']
+  completion_hit_frames: 2         # 连续 2 帧命中判定信号 A
+  prompt_dismiss: [close_button, blank_area, esc]
+  blank_click_point: [0.02, 0.95]  # 安全空白点（归一化）
+
+parse:
+  default_encoding: auto
+  fail_ratio_threshold: 0.05
+  batch_size: 1000
+  type_sample_rows: 200
+
+security:
+  enforce_review: true             # 未审核签名的作业配置拒绝执行
+  encrypt_sensitive: true
+
+log:
+  level: INFO
+  retention_days: 90
+  snapshot_retention_days: 30
+  buffer_max: 5000                 # 界面日志滚动缓冲上限

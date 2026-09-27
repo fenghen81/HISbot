@@ -1,0 +1,53 @@
+# =====================================================================
+# 字段映射 mappings/inpatient_daily.yaml（文档附录 B.5）
+# =====================================================================
+field_mapping:
+  target_table: t_report_record
+  business_key: [report_date, dept_code, item_code]
+  on_conflict: update
+  columns:
+    - source: 统计日期
+      target: report_date
+      type: date
+      required: true
+      transforms: [strip, to_date]
+    - source: 科室编码
+      target: dept_code
+      type: text
+      required: true
+      transforms: [strip, upper]
+    - source: 科室名称
+      target: dept_name
+      type: text
+      transforms: [strip]
+    - source: 项目编码
+      target: item_code
+      type: text
+      required: true
+    - source: 项目名称
+      target: item_name
+      type: text
+    - source: 患者姓名
+      target: patient_name
+      type: text
+      sensitive: true
+      mask_rule: name               # 张*
+      encrypt: true
+    - source: 身份证号
+      target: id_card
+      type: text
+      sensitive: true
+      encrypt: true
+      index_mode: hmac              # 生成 id_card_hmac 精确检索
+    - source: 联系电话
+      target: phone
+      type: text
+      sensitive: true
+      mask_rule: phone              # 138****1234
+      encrypt: true
+    - source: 金额(元)
+      target: amount
+      type: decimal
+      transforms: [strip_unit, to_decimal]
+  drop_unmapped_sensitive: true     # 未映射的敏感列直接丢弃
+  keep_unmapped_as_ext: true        # 其余列进 ext_data（JSON）

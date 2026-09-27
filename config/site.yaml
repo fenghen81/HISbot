@@ -1,0 +1,39 @@
+# =====================================================================
+# 站点配置 site.yaml（文档附录 B.2）
+# =====================================================================
+site:
+  site_id: his-main
+  name: 住院管理系统
+  base_url: http://10.10.8.20:8080/his
+  browser: chrome                  # chrome | edge | firefox
+  window_title_pattern: '.*住院管理.*|.*HIS.*'
+  # ---- HIS 窗口定位（三选一）----
+  # title  : 按上面的窗口标题正则匹配（默认，HIS 需已登录打开）
+  # active : 直接取“当前前台窗口”（先手动点到 HIS 窗口使其置前，再点运行/测试）
+  # launch : 由本工具启动下面指定的 HIS 主程序，再自动绑定其窗口
+  locate_mode: title
+  program_path: ''                 # locate_mode=launch 时必填，如 C:\HIS\HisClient.exe
+  program_args: ''                 # 启动参数，可留空，如 --env prod
+  work_dir: ''                     # 工作目录，留空则取主程序所在目录
+  launch_wait_s: 8                 # 启动后等待主窗口出现的最长秒数
+
+login:
+  account_field:
+    locator: ocr
+    keywords: ['用户名', '账号', '用户编码']
+  password_field:
+    locator: ocr
+    keywords: ['密码']
+    offset_relation: below_account
+  submit_button:
+    locator: template
+    keywords: ['登录', '登 录', '确定']
+  success_indicator:
+    type: page_fingerprint
+    value: 'home_fingerprint'
+  captcha: none                    # 需院方为自动化账号关闭验证码
+
+scale:
+  expected_ratio: 1.0              # 必须固定，启动时校验
+  expected_resolution: [1920, 1080]
+  mismatch_policy: abort           # abort | warn
